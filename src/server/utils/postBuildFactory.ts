@@ -18,7 +18,7 @@ export function postBuildFactory(config: ProcessedPluginOptions) {
     debugInfo("parsing documents");
 
     // Give every index entry a unique id so that the index does not need to store long URLs.
-    const allDocuments = await scanDocuments(data);
+    const allDocuments = await scanDocuments(data, config.postScanDocuments);
 
     debugInfo("building index");
 

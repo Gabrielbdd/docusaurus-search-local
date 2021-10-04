@@ -1,7 +1,7 @@
 import fs from "fs";
 import path from "path";
 import util from "util";
-import { DocInfoWithFilePath, SearchDocument } from "../../shared/interfaces";
+import { AllDocuments, DocInfoWithFilePath, PostScanDocumentsCb, SearchDocument } from "../../shared/interfaces";
 import { parse } from "./parse";
 import { debugVerbose } from "./debug";
 
@@ -13,12 +13,13 @@ const getNextDocId = () => {
 };
 
 export async function scanDocuments(
-  DocInfoWithFilePathList: DocInfoWithFilePath[]
+  DocInfoWithFilePathList: DocInfoWithFilePath[],
+  postDocumentsScanCb?: PostScanDocumentsCb
 ): Promise<SearchDocument[][]> {
   const titleDocuments: SearchDocument[] = [];
   const headingDocuments: SearchDocument[] = [];
   const contentDocuments: SearchDocument[] = [];
-  const allDocuments = [titleDocuments, headingDocuments, contentDocuments];
+  const allDocuments: AllDocuments = [titleDocuments, headingDocuments, contentDocuments];
 
   await Promise.all(
     DocInfoWithFilePathList.map(async ({ filePath, url, type }) => {
@@ -65,5 +66,6 @@ export async function scanDocuments(
       }
     })
   );
-  return allDocuments;
+
+  return postDocumentsScanCb ? await postDocumentsScanCb(allDocuments, getNextDocId) : allDocuments
 }

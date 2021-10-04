@@ -48,6 +48,7 @@ const schema = Joi.object<PluginOptions>({
   })
     .default()
     .unknown(false),
+  postScanDocuments: Joi.func(),
 });
 
 export function validateOptions({

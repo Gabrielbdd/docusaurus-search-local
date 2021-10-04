@@ -150,6 +150,8 @@ export interface PluginOptions {
 
   ignoreFiles?: string | RegExp | (string | RegExp)[];
 
+  postScanDocuments?: PostScanDocumentsCb
+
   // searchInputPlaceholder?: string;
   // searchNoResults?: string;
   // searchSeeAllResults?: string;
@@ -164,6 +166,8 @@ export interface PluginOptions {
   // searchPageResultSummary?: string;
   // searchPageResultSummaryPlural?: string;
 }
+
+export type AllDocuments = [SearchDocument[], SearchDocument[], SearchDocument[]]
 
 export type ProcessedPluginOptions = Required<
   Omit<
@@ -182,6 +186,7 @@ export type ProcessedPluginOptions = Required<
   docsDir: string[];
   blogDir: string[];
   ignoreFiles: (string | RegExp)[];
+  postScanDocuments?: PostScanDocumentsCb
 };
 
 export interface PostBuildData {
@@ -196,3 +201,5 @@ export interface DocusaurusContext {
   siteDir: string;
   generatedFilesDir: string;
 }
+
+export type PostScanDocumentsCb = (allDocuments: AllDocuments, idFactory: () => number) => Promise<AllDocuments>
